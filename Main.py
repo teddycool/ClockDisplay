@@ -15,6 +15,7 @@ class Main(object):
         while running:
             try:
                 self._mainloop.update()
+
             except Exception as e:
                 running = False
                 print str(e)

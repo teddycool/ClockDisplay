@@ -1,5 +1,5 @@
 # ClockDisplay
-Using a raspberry pi wth a connected 4-digit 7-segment display to show current time but also outdoor temperature and humidity and some other values.
+Using a raspberry pi with a connected 4-digit 7-segment display to show current time but also outdoor temperature and humidity and some other values.
 
 Hardware:
 Raspberry pi with rasbian

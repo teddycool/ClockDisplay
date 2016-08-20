@@ -20,6 +20,7 @@ class Display(object):
         self._digits = DIGITS #IOs to enable each digit
         self._gpio=gpio
 
+        #TODO: Add support for pwm to dim the display when needed
         for segment in self._segments:
             self._gpio.setup(segment,  self._gpio.OUT)
             self._gpio.output(segment, 1)
