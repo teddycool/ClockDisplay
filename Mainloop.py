@@ -27,6 +27,7 @@ class MainLoop(object):
 
     def update(self):
         self._currentState.update()
+        #TODO: improve statemachine
         if time.time() - self._lastStateChange > 2:
             if self._currentState._statename == "TestState":
                 self._currentState = self._timeState
