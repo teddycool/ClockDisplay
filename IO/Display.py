@@ -3,9 +3,8 @@
 #CL5642BH-33 4 digits with 'time-colon' from ebay: http://www.ebay.com/itm/381691780455
 #To be used in a 'loop'- environemnt, each time the code is called the display is lit for a short while
 
-import RPi.GPIO as GPIO
+
 import time
-import sys
 import string
 
 #Connection dependent
@@ -15,18 +14,19 @@ DIGITS = (24, 36, 38, 37)
 
 class Display(object):
 
-    def __init__(self):
+    def __init__(self,gpio):
 
         self._segments = SEGMENTS #IO used for each segment = a,b,c,d,e,f,g,dp
         self._digits = DIGITS #IOs to enable each digit
+        self._gpio=gpio
 
         for segment in self._segments:
-            GPIO.setup(segment, GPIO.OUT)
-            GPIO.output(segment, 1)
+            self._gpio.setup(segment,  self._gpio.OUT)
+            self._gpio.output(segment, 1)
 
         for digit in self._digits:
-            GPIO.setup(digit, GPIO.OUT)
-            GPIO.output(digit, 0)
+            self._gpio.setup(digit,  self._gpio.OUT)
+            self._gpio.output(digit, 0)
 
         #build valid chars with the segments, common anode means 0 = turn on segment
         self._chars = { ' ':(1,1,1,1,1,1,1,1),
@@ -60,15 +60,15 @@ class Display(object):
 
         for digit in range(4):
             for loop in range(0, len(self._segments)):
-                GPIO.output(self._segments[loop], self._chars[s[digit]][loop])
+                self._gpio.output(self._segments[loop], self._chars[s[digit]][loop])
                 if (int(time.ctime()[18:19]) % 2 == 0) and (digit == 1):
-                    GPIO.output(self._segments[7], 0)
+                    self._gpio.output(self._segments[7], 0)
                 else:
-                    GPIO.output(self._segments[7], 1)
+                    self._gpio.output(self._segments[7], 1)
 
-            GPIO.output(self._digits[digit], 1)
+            self._gpio.output(self._digits[digit], 1)
             time.sleep(0.001)
-            GPIO.output(self._digits[digit], 0)
+            self._gpio.output(self._digits[digit], 0)
 
 
     def showString(self,s):
@@ -83,23 +83,24 @@ class Display(object):
         s = string.replace(s, '.', '')
         for digit in range(len(s)):
             for segment in range(0, len(self._segments)):
-                GPIO.output(self._segments[segment], self._chars[s[digit]][segment])
+                self._gpio.output(self._segments[segment], self._chars[s[digit]][segment])
             if dpseg and dp == digit:
-                    GPIO.output(self._segments[segment], self._chars['.'][segment])
+                self._gpio.output(self._segments[segment], self._chars['.'][segment])
 
-            GPIO.output(self._digits[digit], 1)
+            self._gpio.output(self._digits[digit], 1)
             time.sleep(0.001)
-            GPIO.output(self._digits[digit], 0)
+            self._gpio.output(self._digits[digit], 0)
 
     def testAllSegments(self):
         self.showString('****')
 
 
 if __name__ == '__main__':
+    import RPi.GPIO as GPIO
     print "Testcode for Display"
     import RPi.GPIO as GPIO
     GPIO.setmode(GPIO.BOARD)
-    disp = Display()
+    disp = Display(GPIO)
 
 
     try:
