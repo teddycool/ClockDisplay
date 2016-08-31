@@ -3,9 +3,9 @@ Using a raspberry pi wth a connected 4-digit 7-segment display to show current t
 
 Hardware:
 Raspberry pi with rasbian
-RealTimeClock module
+RealTimeClock module (option)
 CL5642BH-33 4 digits with 'time-colon' from ebay: http://www.ebay.com/itm/381691780455
-8 resistors 560 Ohm
+8 resistors 560 Ohm (Dependent of display. This is choosen to make the display as bright as possible. A dim-factor in the software turns down the brightness depending on the surrounding light)
 board and cables
 
 Software:

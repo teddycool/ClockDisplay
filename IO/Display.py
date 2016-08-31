@@ -8,19 +8,20 @@ import time
 import string
 
 #Connection dependent
-SEGMENTS = (26, 40, 33, 29, 23, 32, 35, 31)
-DIGITS = (24, 36, 38, 37)
+SEGMENTS = (11, 21, 33, 29, 23, 13, 35, 31)     #IO used for each segments = a,b,c,d,e,f,g,dp
+DIGITS = (7, 15, 19, 37)                        #IOs to enable each digit
 
 
 class Display(object):
 
     def __init__(self,gpio):
 
-        self._segments = SEGMENTS #IO used for each segment = a,b,c,d,e,f,g,dp
-        self._digits = DIGITS #IOs to enable each digit
+        self._segments = SEGMENTS
+        self._digits = DIGITS
         self._gpio=gpio
+        self._dimfactor = 0.0 #full power
 
-        #TODO: Add support for pwm to dim the display when needed
+
         for segment in self._segments:
             self._gpio.setup(segment,  self._gpio.OUT)
             self._gpio.output(segment, 1)
@@ -51,7 +52,8 @@ class Display(object):
                         'F':(0,1,1,1,0,0,0,1),
                         'C':(0,1,1,0,0,0,1,1),
                         'E':(0,1,1,0,0,0,0,1),
-                        '*':(0,0,0,0,0,0,0,0)}
+                        '*':(0,0,0,0,0,0,0,0), #TEST: ALL segments including dp
+                        }
 
     #Show system time
     def showTime(self):
@@ -70,6 +72,8 @@ class Display(object):
             self._gpio.output(self._digits[digit], 1)
             time.sleep(0.001)
             self._gpio.output(self._digits[digit], 0)
+            #Dimming factor
+            time.sleep(self._dimfactor)
 
 
     def showString(self,s):
@@ -91,9 +95,17 @@ class Display(object):
             self._gpio.output(self._digits[digit], 1)
             time.sleep(0.001)
             self._gpio.output(self._digits[digit], 0)
+            # Dimming factor
+            time.sleep(self._dimfactor)
 
     def testAllSegments(self):
         self.showString('****')
+
+
+    def setDimFactor(self, factor=0):
+        factor = float(factor)
+        if factor in range(0,6):
+            self._dimfactor=factor/1000
 
 
 if __name__ == '__main__':
@@ -102,10 +114,16 @@ if __name__ == '__main__':
     import RPi.GPIO as GPIO
     GPIO.setmode(GPIO.BOARD)
     disp = Display(GPIO)
-
+    starttime =time.time()
+    dimfactor = 0
 
     try:
         while True:
             disp.testAllSegments()
+            if time.time()- starttime > 2:
+                dimfactor = dimfactor + 1
+                disp.setDimFactor(dimfactor)
+                starttime = time.time()
+
     except KeyboardInterrupt:
         GPIO.cleanup()
