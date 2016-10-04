@@ -25,3 +25,8 @@ if __name__ == "__main__":
     print 'Started from: Main.py,  if __name__ == "__main__" '
     gl=Main()
     gl.run()
+
+
+#Put in  /etc/rc.local for autostart at boot:
+#cd /home/pi/clockdisplay
+#sudo python Main.py &

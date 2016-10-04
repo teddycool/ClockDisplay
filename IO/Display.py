@@ -7,9 +7,9 @@
 import time
 import string
 
-#Connection dependent
-SEGMENTS = (11, 21, 33, 29, 23, 13, 35, 31)     #IO used for each segments = a,b,c,d,e,f,g,dp
-DIGITS = (7, 15, 19, 37)                        #IOs to enable each digit
+#Connection dependent BCM mode, actual pin-no. NOT GPIO-no
+SEGMENTS = (5, 15, 29, 21, 19, 7, 31, 23)     #IO used for each segments = a,b,c,d,e,f,g,dp
+DIGITS = (3, 11, 13, 33)                        #IOs to enable each digit
 
 
 class Display(object):
@@ -52,6 +52,7 @@ class Display(object):
                         'F':(0,1,1,1,0,0,0,1),
                         'C':(0,1,1,0,0,0,1,1),
                         'E':(0,1,1,0,0,0,0,1),
+                        'g':(0,0,1,1,1,0,0,1),
                         '*':(0,0,0,0,0,0,0,0), #TEST: ALL segments including dp
                         }
 
@@ -60,6 +61,9 @@ class Display(object):
         n = time.ctime()[11:13] + time.ctime()[14:16]
 
         s = str(n).rjust(4)
+        print s
+        print len(s)
+        #TODO: replace with showString and handle time-colon
 
         for digit in range(4):
             for loop in range(0, len(self._segments)):
@@ -79,13 +83,15 @@ class Display(object):
     def showString(self,s):
         #special handling of dp...
         #depending on the dsplay, dp is only allowed in string-position 3.
-
+        print s
+        print len(s)
         dp = string.find(s, '.')
         dpseg = False
         if dp == 3: #n.
             dpseg=True
             dp=dp-1
         s = string.replace(s, '.', '')
+
         for digit in range(len(s)):
             for segment in range(0, len(self._segments)):
                 self._gpio.output(self._segments[segment], self._chars[s[digit]][segment])

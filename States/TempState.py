@@ -1,6 +1,7 @@
 from StateBase import StateLoop
 import time
 from IO import Display
+import urllib2
 
 
 class TempState(StateLoop):
@@ -9,7 +10,27 @@ class TempState(StateLoop):
 
     def initialize(self):
         self._start = time.time()
+        self._temp = self._getTemp()
+        self._lastTempRead= time.time()
 
     def update(self):
-        temp = "-12.3"
-        self._display.showString(temp)
+        if time.time() - self._lastTempRead > 60:
+            self._temp = self._getTemp()
+            self._lastTempRead = time.time()
+        self._display.showString(self._temp)
+
+
+    def _getTemp(self):
+        response = urllib2.urlopen("http://www.sundback.com/ws/getCurrentOutTemp.php")
+        test = response.read()
+        test = test+'g'
+
+        if len(test) == 1:
+            test = '   ' + test
+        else:
+            if len(test) == 2:
+                test = '  ' + test
+            else:
+                if len(test) == 3:
+                    test = ' ' + test
+        return test

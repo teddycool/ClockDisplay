@@ -22,15 +22,17 @@ class MainLoop(object):
         self._testState = TestState.TestState("TestState", self._display)
         self._timeState = TimeState.TimeState("TimeState", self._display)
         self._tempState = TempState.TempState("TempState", self._display)
+        self._tempState.initialize()
         self._currentState = self._testState
         self._lastStateChange = time.time()
 
     def update(self):
         self._currentState.update()
         #TODO: improve statemachine
-        if time.time() - self._lastStateChange > 2:
+        if time.time() - self._lastStateChange > 3:
             if self._currentState._statename == "TestState":
                 self._currentState = self._timeState
+                #print "Current state: " + self._currentState._statename
             else:
                 if self._currentState._statename == "TimeState":
                     self._currentState = self._tempState
