@@ -14,7 +14,7 @@ class TempState(StateLoop):
         self._lastTempRead= time.time()
 
     def update(self):
-        if time.time() - self._lastTempRead > 60:
+        if time.time() - self._lastTempRead > 30:
             self._temp = self._getTemp()
             self._lastTempRead = time.time()
         self._display.showString(self._temp)

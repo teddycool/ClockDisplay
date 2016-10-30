@@ -15,6 +15,7 @@ class OutTemp(object):
 
 
     def update(self):
+        #TODO: make some sanity-check
         response =  urllib2.urlopen("http://www.sundback.com/ws/getCurrentOutTemp.php")
         return response.read()
 
@@ -25,11 +26,5 @@ if __name__ == "__main__":
     ot = OutTemp()
     ot.initialize()
     test = ot.update()
-    if len(test) == 1:
-        test = '   ' + test
-    if len(test) == 2:
-        test = '  ' + test
-    if len(test) == 3:
-        test = ' ' + test
-
+    print test
     print len(test)
