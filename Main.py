@@ -1,4 +1,8 @@
 from MainLoop import MainLoop
+import sys
+import time
+import os
+
 
 class Main(object):
 
@@ -16,9 +20,16 @@ class Main(object):
             try:
                 self._mainloop.update()
 
-            except Exception as e:
+            except:
                 running = False
-                print str(e)
+                e = sys.exc_info()
+                t = time
+                n = time.ctime()[11:13] + time.ctime()[14:16]
+                s = str(n).rjust(4)
+                f = file(time.asctime()+".log", 'w')
+                for l in e:
+                    f.write(str(l))
+                os.system('sudo reboot')
 
 
 if __name__ == "__main__":

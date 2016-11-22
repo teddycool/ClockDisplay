@@ -9,7 +9,6 @@ from States import TempState
 
 #Global GPIO used by all...
 import RPi.GPIO as GPIO
-import os
 
 class MainLoop(object):
     def __init__(self):

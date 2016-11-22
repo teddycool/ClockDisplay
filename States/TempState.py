@@ -21,8 +21,13 @@ class TempState(StateLoop):
 
 
     def _getTemp(self):
-        response = urllib2.urlopen("http://www.sundback.com/ws/getCurrentOutTemp.php")
-        test = response.read()
+
+        try:
+            response = urllib2.urlopen("http://www.sundback.com/ws/getCurrentOutTemp.php")
+            test = response.read()
+        except:
+            test = "-"
+
         test = test+'g'
 
         if len(test) == 1:
